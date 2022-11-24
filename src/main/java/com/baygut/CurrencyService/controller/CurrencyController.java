@@ -1,5 +1,6 @@
 package com.baygut.CurrencyService.controller;
 import com.baygut.CurrencyService.model.Currency;
+import com.baygut.CurrencyService.schedule.Scheduler;
 import com.baygut.CurrencyService.service.CurrencyService;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
+
 
     /**
      * Runs when GET request sent to browser or POSTMAN.
@@ -66,47 +68,9 @@ public class CurrencyController {
         return new ResponseEntity<>(OK);
     }
 
-    /***
-     * Data Receiving Automation. This method runs every hour. Receives data from 2 different apis and saves the datas to database.
-     */
-    @Scheduled(fixedDelay = 3_600_000)
-    public void collectDataAutomation() {
-        String sourceUSD_1 = "https://api.apilayer.com/exchangerates_data/convert?to=TRY&from=USD&amount=1";
-        String sourceUSD_2 = "https://api.apilayer.com/currency_data/convert?to=TRY&from=USD&amount=1";
-        String sourceEUR_1 = "https://api.apilayer.com/exchangerates_data/convert?to=TRY&from=EUR&amount=1";
-        String sourceEUR_2 = "https://api.apilayer.com/currency_data/convert?to=TRY&from=EUR&amount=1";
-        var c1 = collectDataFromSources(sourceUSD_1, "USD");
-        var c2 = collectDataFromSources(sourceUSD_2, "USD");
-        var c3 = collectDataFromSources(sourceEUR_1, "EUR");
-        var c4 = collectDataFromSources(sourceEUR_2, "EUR");
-        createCurrency(c1);
-        createCurrency(c2);
-        createCurrency(c3);
-        createCurrency(c4);
-        System.out.println("Data received...");
-    }
 
     private Currency getCurrencyById(String id) {
         return currencyService.getCurrencyById(id);
     }
 
-    private Currency collectDataFromSources(String source, String target) {
-        Currency currency = new Currency();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("apikey", "BrGPVIMYsIhvQhYxbVgoNp5qqQ84DySI");
-        HttpEntity<Object> entity=new HttpEntity<Object>(headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(source, HttpMethod.GET, entity, String.class);
-
-        final JSONObject obj = new JSONObject(response.getBody());
-
-        currency.setSource(source);
-        currency.setTarget(target);
-        currency.setSellPrice(obj.getDouble("result"));
-        currency.setBuyPrice(obj.getDouble("result"));
-
-        return currency;
-    }
 }
