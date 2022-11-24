@@ -1,4 +1,4 @@
-package com.baygut.currencyService;
+package com.baygut.CurrencyService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
