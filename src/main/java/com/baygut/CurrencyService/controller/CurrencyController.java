@@ -24,27 +24,51 @@ public class CurrencyController {
 
     private final CurrencyService currencyService;
 
+    /**
+     * Runs when GET request sent to browser or POSTMAN.
+     * @param target of currency
+     * @param source of the info
+     * @return list of requested data and HttpStatus.OK
+     */
     @GetMapping
     public ResponseEntity<List<Currency>> getCurrencies(@RequestParam(required = false) String target, @RequestParam(required = false) String source) {
         return new ResponseEntity<>(currencyService.getCurrencies(target, source), OK);
     }
 
+    /**
+     * Runs when GET request sent to browser or POSTMAN,
+     * @param id of document
+     * @return requested document and HttpStatus.OK
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Currency> getCurrency(@PathVariable String id) {
         return new ResponseEntity<>(getCurrencyById(id), OK);
     }
 
+    /**
+     * Runs when POST request sent to browser or POSTMAN. It posts the data to Database.
+     * @param newCurrency the data that wanted to post to database.
+     * @return created object and HttpStatus.CREATED
+     */
     @PostMapping
     public ResponseEntity<Currency> createCurrency(@RequestBody Currency newCurrency) {
         return new ResponseEntity<>(currencyService.createCurrency(newCurrency), CREATED);
     }
 
+    /***
+     * Deletes the given document
+     * @param id of document
+     * @return HttpStatus.OK
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCurrency(@PathVariable String id) {
         currencyService.deleteCurrency(id);
         return new ResponseEntity<>(OK);
     }
 
+    /***
+     * Data Receiving Automation. This method runs every hour. Receives data from 2 different apis and saves the datas to database.
+     */
     @Scheduled(fixedDelay = 3_600_000)
     public void collectDataAutomation() {
         String sourceUSD_1 = "https://api.apilayer.com/exchangerates_data/convert?to=TRY&from=USD&amount=1";
@@ -84,9 +108,5 @@ public class CurrencyController {
         currency.setBuyPrice(obj.getDouble("result"));
 
         return currency;
-
-
     }
-
-
 }

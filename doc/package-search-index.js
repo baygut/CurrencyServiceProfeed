@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.baygut.CurrencyService"},{"l":"com.baygut.CurrencyService.controller"},{"l":"com.baygut.CurrencyService.model"},{"l":"com.baygut.CurrencyService.repository"},{"l":"com.baygut.CurrencyService.service"}];updateSearchResults();

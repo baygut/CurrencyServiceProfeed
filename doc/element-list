@@ -1,0 +1,5 @@
+com.baygut.CurrencyService
+com.baygut.CurrencyService.controller
+com.baygut.CurrencyService.model
+com.baygut.CurrencyService.repository
+com.baygut.CurrencyService.service
