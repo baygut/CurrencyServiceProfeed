@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.ParseException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -23,8 +25,8 @@ public class CurrencyController {
     private final CurrencyService currencyService;
 
     @GetMapping
-    public ResponseEntity<List<Currency>> getCurrencies(@RequestParam(required = false) String target){
-        return new ResponseEntity<>(currencyService.getCurrencies(target), OK);
+    public ResponseEntity<List<Currency>> getCurrencies(@RequestParam(required = false) String target, @RequestParam(required = false) String source) {
+        return new ResponseEntity<>(currencyService.getCurrencies(target, source), OK);
     }
 
     @GetMapping("/{id}")
@@ -35,11 +37,6 @@ public class CurrencyController {
     @PostMapping
     public ResponseEntity<Currency> createCurrency(@RequestBody Currency newCurrency) {
         return new ResponseEntity<>(currencyService.createCurrency(newCurrency), CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> getCurrency(@PathVariable String id, @RequestBody Currency newCurrency) {
-        return null;
     }
 
     @DeleteMapping("/{id}")

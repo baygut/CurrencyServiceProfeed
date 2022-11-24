@@ -13,11 +13,13 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
 
-    public List<Currency> getCurrencies(String target) {
-        if(target == null)
+    public List<Currency> getCurrencies(String target, String source) {
+        if(target == null && source == null)
             return currencyRepository.findAll();
-        else
+        else if(source == null)
             return currencyRepository.findByTarget(target);
+        else
+            return currencyRepository.findBySource(source);
     }
 
     public Currency createCurrency(Currency newCurrency) {
